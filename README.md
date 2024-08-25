@@ -1,8 +1,8 @@
-# Vim Plugins
+# Commands
 
- * comment.vim - toggle comment line
+ - vim-aleq.php : Align lines based on equal sign.
 
-# Install
+# Plugins
 
-    sh install.sh
+ - comment.vim : toggle comment line.
 
