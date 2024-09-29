@@ -40,9 +40,25 @@
  **/
 
 $text = stream_get_contents(STDIN);
+$separators = array("=", ":");
 
 // split into line
 $lines = explode("\n", $text);
+
+// set separator
+$separator = null;
+
+foreach ($separators as $s) {
+  if (strpos($lines[0], $s) !== false) {
+    $separator = $s;
+    break;
+  }
+}
+
+if (is_null($separator) == true) {
+  fwrite(STDOUT, $text);
+  exit(0);
+}
 
 // find the farthest equal sign
 $pos_max = 0;
@@ -50,7 +66,7 @@ foreach ($lines as $i => $line) {
 
 	// > check equal
 
-	$pos = strpos($line, '=');
+	$pos = strpos($line, $separator);
 	if ($pos === false) {
 		continue;
 	}
@@ -65,10 +81,10 @@ foreach ($lines as $i => $line) {
 	$rtext = substr($line, $pos + 1);
 	$rtext = ltrim($rtext, " ");
 
-	$line = $ltext."=".$rtext;
+	$line = $ltext.$separator.$rtext;
 	$lines[$i] = $line;
 
-	$pos = strpos($line, '=');
+	$pos = strpos($line, $separator);
 
 	if ($pos <= $pos_max) {
 		continue;
@@ -80,7 +96,7 @@ foreach ($lines as $i => $line) {
 // align by equal sign
 foreach ($lines as $i => $line) {
 
-	$pos = strpos($line, '=');
+	$pos = strpos($line, $separator);
 
 	if ($pos === false) {
 		continue;
@@ -89,7 +105,7 @@ foreach ($lines as $i => $line) {
 	$ltext = substr($line, 0, $pos);
 	$rtext = substr($line, $pos + 1);
 	$ltext = str_pad($ltext, $pos_max);
-	$line  = $ltext." = ".$rtext;
+	$line  = $ltext." {$separator} ".$rtext;
 	$lines[$i] = $line;
 }
 
